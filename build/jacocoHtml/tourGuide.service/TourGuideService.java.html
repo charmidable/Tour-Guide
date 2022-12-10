@@ -66,21 +66,21 @@ public class TourGuideService
 
     public Collection&lt;UserReward&gt; getUserRewards(User user)
     {
-<span class="nc" id="L69">        return user.getUserRewards();</span>
+<span class="fc" id="L69">        return user.getUserRewards();</span>
     }
 
 
 
     public VisitedLocation getUserLocation(User user)
     {
-<span class="nc bnc" id="L76" title="All 2 branches missed.">        return (user.getVisitedLocations().size() &gt; 0) ? user.getLastVisitedLocation() : trackUserLocation(user);</span>
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">        return (user.getVisitedLocations().size() &gt; 0) ? user.getLastVisitedLocation() : trackUserLocation(user);</span>
     }
 
 
 
     public User getUser(String userName)
     {
-<span class="nc" id="L83">        return internalUserMap.get(userName);</span>
+<span class="fc" id="L83">        return internalUserMap.get(userName);</span>
     }
 
 
@@ -93,28 +93,28 @@ public class TourGuideService
 
     public void addUser(User user)
     {
-<span class="nc bnc" id="L96" title="All 2 branches missed.">        if (!internalUserMap.containsKey(user.getUserName()))</span>
+<span class="pc bpc" id="L96" title="1 of 2 branches missed.">        if (!internalUserMap.containsKey(user.getUserName()))</span>
         {
-<span class="nc" id="L98">            internalUserMap.put(user.getUserName(), user);</span>
+<span class="fc" id="L98">            internalUserMap.put(user.getUserName(), user);</span>
         }
-<span class="nc" id="L100">    }</span>
+<span class="fc" id="L100">    }</span>
 
 
 
     public List&lt;Provider&gt; getTripDeals(User user)
     {
-<span class="nc" id="L106">        int cumulatativeRewardPoints = user.getUserRewards().stream().mapToInt(i -&gt; i.getRewardPoints()).sum();</span>
+<span class="pc" id="L106">        int cumulatativeRewardPoints = user.getUserRewards().stream().mapToInt(i -&gt; i.getRewardPoints()).sum();</span>
 
-<span class="nc" id="L108">        List&lt;Provider&gt; providers = tripPricer.getPrice(</span>
+<span class="fc" id="L108">        List&lt;Provider&gt; providers = tripPricer.getPrice(</span>
                                                         tripPricerApiKey,
-<span class="nc" id="L110">                                                        user.getUserId(),</span>
-<span class="nc" id="L111">                                                        user.getUserPreferences().getNumberOfAdults(),</span>
-<span class="nc" id="L112">                                                        user.getUserPreferences().getNumberOfChildren(),</span>
-<span class="nc" id="L113">                                                        user.getUserPreferences().getTripDuration(),</span>
+<span class="fc" id="L110">                                                        user.getUserId(),</span>
+<span class="fc" id="L111">                                                        user.getUserPreferences().getNumberOfAdults(),</span>
+<span class="fc" id="L112">                                                        user.getUserPreferences().getNumberOfChildren(),</span>
+<span class="fc" id="L113">                                                        user.getUserPreferences().getTripDuration(),</span>
                                                         cumulatativeRewardPoints
                                                       );
-<span class="nc" id="L116">        user.setTripDeals(providers);</span>
-<span class="nc" id="L117">        return providers;</span>
+<span class="fc" id="L116">        user.setTripDeals(providers);</span>
+<span class="fc" id="L117">        return providers;</span>
     }
 
 
@@ -141,11 +141,11 @@ public class TourGuideService
 
     public List&lt;Attraction&gt; getFiveNearestAttractions(VisitedLocation visitedLocation)
     {
-<span class="nc" id="L144">        return gpsUtil.getAttractions()</span>
-<span class="nc" id="L145">                      .stream()</span>
-<span class="nc" id="L146">                      .sorted(Comparator.comparing(attraction -&gt; rewardsService.getDistance(visitedLocation.location, attraction)))</span>
-<span class="nc" id="L147">                      .limit(5)</span>
-<span class="nc" id="L148">                      .collect(Collectors.toList());</span>
+<span class="fc" id="L144">        return gpsUtil.getAttractions()</span>
+<span class="fc" id="L145">                      .stream()</span>
+<span class="fc" id="L146">                      .sorted(Comparator.comparing(attraction -&gt; rewardsService.getDistance(visitedLocation.location, attraction)))</span>
+<span class="fc" id="L147">                      .limit(5)</span>
+<span class="fc" id="L148">                      .collect(Collectors.toList());</span>
     }
 
 
