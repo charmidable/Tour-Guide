@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserPreferences.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">TourGuide</a> &gt; <a href="index.source.html" class="el_package">tourGuide.user</a> &gt; <span class="el_source">UserPreferences.java</span></div><h1>UserPreferences.java</h1><pre class="source lang-java linenums">package tourGuide.user;
+
+import javax.money.CurrencyUnit;
+import javax.money.Monetary;
+
+import org.javamoney.moneta.Money;
+
+
+public class UserPreferences
+{
+
+<span class="fc" id="L12">    private int attractionProximity = Integer.MAX_VALUE;</span>
+<span class="fc" id="L13">    private CurrencyUnit currency = Monetary.getCurrency(&quot;USD&quot;);</span>
+<span class="fc" id="L14">    private Money lowerPricePoint = Money.of(0, currency);</span>
+<span class="fc" id="L15">    private Money highPricePoint = Money.of(Integer.MAX_VALUE, currency);</span>
+    private String userName;
+<span class="fc" id="L17">    private int tripDuration = 1;</span>
+<span class="fc" id="L18">    private int ticketQuantity = 1;</span>
+<span class="fc" id="L19">    private int numberOfAdults = 1;</span>
+<span class="fc" id="L20">    private int numberOfChildren = 0;</span>
+
+    public UserPreferences()
+<span class="fc" id="L23">    {</span>
+<span class="fc" id="L24">    }</span>
+
+    public void setAttractionProximity(int attractionProximity)
+    {
+<span class="nc" id="L28">        this.attractionProximity = attractionProximity;</span>
+<span class="nc" id="L29">    }</span>
+
+    public int getAttractionProximity()
+    {
+<span class="nc" id="L33">        return attractionProximity;</span>
+    }
+
+    public Money getLowerPricePoint()
+    {
+<span class="nc" id="L38">        return lowerPricePoint;</span>
+    }
+
+    public void setLowerPricePoint(Money lowerPricePoint)
+    {
+<span class="nc" id="L43">        this.lowerPricePoint = lowerPricePoint;</span>
+<span class="nc" id="L44">    }</span>
+
+    public Money getHighPricePoint()
+    {
+<span class="nc" id="L48">        return highPricePoint;</span>
+    }
+
+    public void setHighPricePoint(Money highPricePoint)
+    {
+<span class="nc" id="L53">        this.highPricePoint = highPricePoint;</span>
+<span class="nc" id="L54">    }</span>
+
+    public int getTripDuration()
+    {
+<span class="fc" id="L58">        return tripDuration;</span>
+    }
+
+    public void setTripDuration(int tripDuration)
+    {
+<span class="nc" id="L63">        this.tripDuration = tripDuration;</span>
+<span class="nc" id="L64">    }</span>
+
+    public int getTicketQuantity()
+    {
+<span class="nc" id="L68">        return ticketQuantity;</span>
+    }
+
+    public void setTicketQuantity(int ticketQuantity)
+    {
+<span class="nc" id="L73">        this.ticketQuantity = ticketQuantity;</span>
+<span class="nc" id="L74">    }</span>
+
+    public int getNumberOfAdults()
+    {
+<span class="fc" id="L78">        return numberOfAdults;</span>
+    }
+
+    public void setNumberOfAdults(int numberOfAdults)
+    {
+<span class="nc" id="L83">        this.numberOfAdults = numberOfAdults;</span>
+<span class="nc" id="L84">    }</span>
+
+    public int getNumberOfChildren()
+    {
+<span class="fc" id="L88">        return numberOfChildren;</span>
+    }
+
+    public void setNumberOfChildren(int numberOfChildren)
+    {
+<span class="nc" id="L93">        this.numberOfChildren = numberOfChildren;</span>
+<span class="nc" id="L94">    }</span>
+
+    public String getUserName()
+    {
+<span class="nc" id="L98">        return userName;</span>
+    }
+
+    public void setUserName(String userName)
+    {
+<span class="nc" id="L103">        this.userName = userName;</span>
+<span class="nc" id="L104">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
