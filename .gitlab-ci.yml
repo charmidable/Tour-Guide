@@ -1,0 +1,38 @@
+image: openjdk:8
+
+# Disable the Gradle daemon for Continuous Integration servers as correctness
+# is usually a priority over speed in CI environments. Using a fresh
+# runtime for each build is more reliable since the runtime is completely
+# isolated from any previous builds.
+stages:
+  - build
+  - test
+
+cache:
+  paths:
+    - build
+    - .gradle
+
+variables:
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+
+before_script:
+  - GRADLE_USER_HOME="$(pwd)/.gradle"
+  - export GRADLE_USER_HOME
+  - chmod +x gradlew
+
+build_job:
+  stage: build
+  script: ./gradlew --build-cache assemble
+  artifacts:
+    paths:
+      - build/libs/*.jar
+  only:
+    - master
+
+test_job:
+  stage: test
+  script:
+    - ./gradlew test
+  artifacts:
+    when: always
