@@ -11,11 +11,11 @@ public class UserReward
     private int rewardPoints;
 
     public UserReward(VisitedLocation visitedLocation, Attraction attraction, int rewardPoints)
-<span class="fc" id="L14">    {</span>
-<span class="fc" id="L15">        this.visitedLocation = visitedLocation;</span>
-<span class="fc" id="L16">        this.attraction = attraction;</span>
-<span class="fc" id="L17">        this.rewardPoints = rewardPoints;</span>
-<span class="fc" id="L18">    }</span>
+<span class="nc" id="L14">    {</span>
+<span class="nc" id="L15">        this.visitedLocation = visitedLocation;</span>
+<span class="nc" id="L16">        this.attraction = attraction;</span>
+<span class="nc" id="L17">        this.rewardPoints = rewardPoints;</span>
+<span class="nc" id="L18">    }</span>
 
     public UserReward(VisitedLocation visitedLocation, Attraction attraction)
 <span class="fc" id="L21">    {</span>
@@ -30,7 +30,12 @@ public class UserReward
 
     public int getRewardPoints()
     {
-<span class="fc" id="L33">        return rewardPoints;</span>
+<span class="nc" id="L33">        return rewardPoints;</span>
+    }
+
+    public String getAttractionName()
+    {
+<span class="fc" id="L38">        return this.attraction.attractionName;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

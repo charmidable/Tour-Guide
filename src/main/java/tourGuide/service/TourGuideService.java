@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +55,7 @@ public class TourGuideService
             initializeInternalUsers();
             logger.debug("Finished initializing users");
         }
+
         tracker = new Tracker(this);
         addShutDownHook();
     }
@@ -119,15 +121,27 @@ public class TourGuideService
 
 
 
+
+
+//    public VisitedLocation trackUserLocation(User user)
+//    {
+//        VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
+//        user.addToVisitedLocations(visitedLocation);
+//        rewardsService.calculateRewards(user);
+//        return visitedLocation;
+//    }
+
+
+
     public VisitedLocation trackUserLocation(User user)
     {
-        return CompletableFuture.supplyAsync(() -> gpsUtil.getUserLocation(user.getUserId()))
+        return CompletableFuture.supplyAsync( () -> gpsUtil.getUserLocation(user.getUserId()) )
                                 .thenApply  (
                                                 visitedLocation -> {
                                                                         user.addToVisitedLocations(visitedLocation);
                                                                         rewardsService.calculateRewards(user);
                                                                         return visitedLocation;
-                                                                    }
+                                                                   }
                                             )
                                 .join();
     }
@@ -139,27 +153,40 @@ public class TourGuideService
     }
 
 
-    public List<Attraction> getFiveNearestAttractions(VisitedLocation visitedLocation)
+    public List<Attraction> getNearbyAttractions(VisitedLocation visitedLocation)
     {
-        return gpsUtil.getAttractions()
-                      .stream()
-                      .sorted(Comparator.comparing(attraction -> rewardsService.getDistance(visitedLocation.location, attraction)))
-                      .limit(5)
-                      .collect(Collectors.toList());
+        return Stream.concat
+        (
+                gpsUtil.getAttractions()
+                       .stream()
+                       .filter( attraction -> rewardsService.isWithinAttractionProximity(attraction, visitedLocation.location)),
+
+                gpsUtil.getAttractions()
+                       .stream()
+                       .sorted(Comparator.comparing(attraction -> rewardsService.getDistance(visitedLocation.location, attraction)))
+                       .limit(5)
+        )
+         .distinct()
+         .collect(Collectors.toList());
     }
 
 
 
-    public Map<String, Location> getAllCurrentLocations()
-    {
-        Map<String, Location> locationMap = new ConcurrentHashMap<>();
+//    public Map<UUID, Location> getAllCurrentLocations()
+//    {
+//        Map<UUID, Location> locationMap = new ConcurrentHashMap<>();
+//
+//        getAllUsers().forEach(
+//                                user -> { locationMap.put(user.getUserId(), user.getLastVisitedLocation().location);}
+//                             );
+//        return locationMap;
+//    }
 
-        getAllUsers().forEach(
-                                user -> {
-                                    locationMap.put(user.getUserId().toString(), user.getLastVisitedLocation().location);
-                                }
-                             );
-        return locationMap;
+
+
+    public List<Location> getAllCurrentLocations()
+    {
+        return getAllUsers().stream().map(User::getCurrentLocation).collect(Collectors.toList());
     }
 
 
@@ -231,7 +258,7 @@ public class TourGuideService
         return Date.from(localDateTime.toInstant(ZoneOffset.UTC));
     }
 
-    public UserPreferences updateUserPreferences(UserPreferences newPreferences)
+    public UserPreferences setUserPreferences(UserPreferences newPreferences)
     {
         String userName = newPreferences.getUserName();
 

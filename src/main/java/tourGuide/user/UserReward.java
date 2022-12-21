@@ -32,4 +32,9 @@ public class UserReward
     {
         return rewardPoints;
     }
+
+    public String getAttractionName()
+    {
+        return this.attraction.attractionName;
+    }
 }

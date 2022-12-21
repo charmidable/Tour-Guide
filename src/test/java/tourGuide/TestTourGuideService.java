@@ -3,12 +3,11 @@ package tourGuide;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
+import java.util.*;
 
+import gpsUtil.location.Location;
+import org.javamoney.moneta.Money;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import gpsUtil.GpsUtil;
@@ -19,7 +18,10 @@ import tourGuide.helper.InternalTestHelper;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
 import tourGuide.user.User;
+import tourGuide.user.UserPreferences;
 import tripPricer.Provider;
+
+import javax.money.Monetary;
 
 public class TestTourGuideService
 {
@@ -72,13 +74,13 @@ public class TestTourGuideService
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 		InternalTestHelper.setInternalUserNumber(0);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
-		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
+		User user1 = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		User user2 = new User(UUID.randomUUID(), "jon2", "000", "jon2@tourGuide.com");
-		tourGuideService.addUser(user);
+		tourGuideService.addUser(user1);
 		tourGuideService.addUser(user2);
 		List<User> allUsers = tourGuideService.getAllUsers();
 		tourGuideService.tracker.stopTracking();
-		assertTrue(allUsers.contains(user));
+		assertTrue(allUsers.contains(user1));
 		assertTrue(allUsers.contains(user2));
 	}
 
@@ -99,7 +101,7 @@ public class TestTourGuideService
 
 
 	@Test
-	public void getFiveNearestAttractions()
+	public void getNearbyAttractions()
 	{
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
@@ -107,7 +109,7 @@ public class TestTourGuideService
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		VisitedLocation visitedLocation = tourGuideService.trackUserLocation(user);
-		List<Attraction> attractions = tourGuideService.getFiveNearestAttractions(visitedLocation);
+		List<Attraction> attractions = tourGuideService.getNearbyAttractions(visitedLocation);
 		tourGuideService.tracker.stopTracking();
 		assertEquals(5, attractions.size());
 	}
@@ -124,5 +126,69 @@ public class TestTourGuideService
 		List<Provider> providers = tourGuideService.getTripDeals(user);
 		tourGuideService.tracker.stopTracking();
 		assertEquals(5, providers.size());
+	}
+
+
+	@Test
+	public void getAllUserLocation()
+	{
+		GpsUtil gpsUtil = new GpsUtil();
+		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
+		InternalTestHelper.setInternalUserNumber(0);
+		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
+
+		User user1 = new User(UUID.randomUUID(), "jon1", "111", "jon1@tourGuide.com");
+		Location l1 = new Location(1,1);
+		user1.addToVisitedLocations(new VisitedLocation(user1.getUserId(),l1, new Date()));
+		tourGuideService.addUser(user1);
+
+		User user2 = new User(UUID.randomUUID(), "jon2", "222", "jon2@tourGuide.com");
+		Location l2 = new Location(2,2);
+		user2.addToVisitedLocations(new VisitedLocation(user2.getUserId(),l2, new Date()));
+		tourGuideService.addUser(user2);
+
+		User user3 = new User(UUID.randomUUID(), "jon3", "333", "jon3@tourGuide.com");
+		Location l3 = new Location(3,3);
+		user3.addToVisitedLocations(new VisitedLocation(user3.getUserId(),l3, new Date()));
+		tourGuideService.addUser(user3);
+
+		List<Location> locations = tourGuideService.getAllCurrentLocations();
+
+		assertEquals(3, locations.size());
+
+		assertTrue(locations.contains(l1));
+		assertTrue(locations.contains(l2));
+		assertTrue(locations.contains(l3));
+	}
+
+	@Test
+	public void updateUserPreferencesTest()
+	{
+		GpsUtil gpsUtil = new GpsUtil();
+		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
+		InternalTestHelper.setInternalUserNumber(0);
+		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
+
+		User user =new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
+		tourGuideService.addUser(user);
+
+		UserPreferences userPreferences = new UserPreferences();
+		userPreferences.setNumberOfAdults(1);
+		userPreferences.setNumberOfChildren(1);
+		userPreferences.setTripDuration(1);
+		userPreferences.setTicketQuantity(1);
+		userPreferences.setLowerPricePoint(Money.of(1, Monetary.getCurrency("USD")));
+		userPreferences.setHighPricePoint(Money.of(1, Monetary.getCurrency("USD")));
+		userPreferences.setAttractionProximity(1);
+
+		user.setUserPreferences(userPreferences);
+
+		assertEquals(user.getUserPreferences().getNumberOfAdults(), 1);
+		assertEquals(user.getUserPreferences().getNumberOfChildren(), 1);
+		assertEquals(user.getUserPreferences().getTripDuration(), 1);
+		assertEquals(user.getUserPreferences().getTicketQuantity(), 1);
+		assertEquals(user.getUserPreferences().getLowerPricePoint(), Money.of(1, Monetary.getCurrency("USD")));
+		assertEquals(user.getUserPreferences().getHighPricePoint(), Money.of(1, Monetary.getCurrency("USD")));
+		assertEquals(user.getUserPreferences().getAttractionProximity(), 1);
 	}
 }

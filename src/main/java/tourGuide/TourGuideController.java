@@ -43,7 +43,7 @@ public class TourGuideController
     public String getNearbyAttractions(@RequestParam String userName)
     {
         VisitedLocation visitedLocation = tourGuideService.getUserLocation(getUser(userName));
-        return JsonStream.serialize(tourGuideService.getFiveNearestAttractions(visitedLocation));
+        return JsonStream.serialize(tourGuideService.getNearbyAttractions(visitedLocation));
     }
 
 
@@ -72,7 +72,7 @@ public class TourGuideController
     @PostMapping("/updateUserPreferences")
     public String setUserPreferences(@RequestBody UserPreferences preferences)
     {
-        UserPreferences userPreferences = tourGuideService.updateUserPreferences(preferences);
+        UserPreferences userPreferences = tourGuideService.setUserPreferences(preferences);
         return JsonStream.serialize(userPreferences);
     }
 

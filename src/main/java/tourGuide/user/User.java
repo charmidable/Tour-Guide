@@ -5,6 +5,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentMap;
 
+import gpsUtil.location.Attraction;
+import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import tripPricer.Provider;
 
@@ -15,8 +17,8 @@ public class User
     private String phoneNumber;
     private String emailAddress;
     private Date latestLocationTimestamp;
-    private  ConcurrentLinkedDeque<VisitedLocation> visitedLocations = new ConcurrentLinkedDeque<>();
-    private ConcurrentMap<String, UserReward> userRewards = new ConcurrentHashMap<>();
+    private Deque<VisitedLocation> visitedLocations = new ConcurrentLinkedDeque<>();
+    private Map<String,UserReward> userRewards      = new ConcurrentHashMap<>();
 
     private UserPreferences userPreferences = new UserPreferences();
     private List<Provider> tripDeals = new ArrayList<>();
@@ -74,7 +76,7 @@ public class User
         visitedLocations.add(visitedLocation);
     }
 
-    public ConcurrentLinkedDeque<VisitedLocation> getVisitedLocations()
+    public Deque<VisitedLocation> getVisitedLocations()
     {
         return visitedLocations;
     }
@@ -86,7 +88,7 @@ public class User
 
     public void addUserReward(UserReward userReward)
     {
-        userRewards.putIfAbsent(userReward.attraction.attractionName, userReward);
+        userRewards.putIfAbsent(userReward.getAttractionName(), userReward);
     }
 
     public Collection<UserReward> getUserRewards()
@@ -106,7 +108,12 @@ public class User
 
     public VisitedLocation getLastVisitedLocation()
     {
-        return visitedLocations.getLast();
+        return visitedLocations.getFirst();
+    }
+
+    public Location getCurrentLocation()
+    {
+        return getLastVisitedLocation().location;
     }
 
     public void setTripDeals(List<Provider> tripDeals)
@@ -117,5 +124,12 @@ public class User
     public List<Provider> getTripDeals()
     {
         return tripDeals;
+    }
+
+    public boolean isAttractionRewarded(Attraction attraction)
+    {
+        return getUserRewards().stream()
+                               .map(UserReward::getAttractionName)
+                               .anyMatch(name -> name.equals(attraction.attractionName));
     }
 }

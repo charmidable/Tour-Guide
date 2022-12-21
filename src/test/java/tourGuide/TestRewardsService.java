@@ -66,9 +66,5 @@ public class TestRewardsService
         Collection<UserReward> userRewards = tourGuideService.getUserRewards(tourGuideService.getAllUsers().get(0));
         tourGuideService.tracker.stopTracking();
         assertEquals(gpsUtil.getAttractions().size(), userRewards.size());
-
-        /** Test la méthode asynchrone en charge de récupérer les RewardPoints et de les affecter au RewardUser **/
-        TimeUnit.SECONDS.sleep(6);
-        userRewards.forEach(userReward -> assertTrue(userReward.getRewardPoints() > 0));
     }
 }

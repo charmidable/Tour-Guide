@@ -59,21 +59,18 @@ public class RewardsService
         {
             for (Attraction attraction : attractions)
             {
-                if(nearAttraction(visitedLocation, attraction))
+                if(!user.isAttractionRewarded(attraction))
                 {
-                    UserReward userReward = new UserReward(visitedLocation, attraction);
-                    user.addUserReward(userReward);
-                    applyRewardPoints(userReward);
+                    if (nearAttraction(visitedLocation, attraction))
+                    {
+                        UserReward userReward = new UserReward(visitedLocation, attraction);
+                        user.addUserReward(userReward);
+                        CompletableFuture.supplyAsync(() -> getRewardPoints(attraction))
+                                         .thenAccept(userReward::setRewardPoints);
+                    }
                 }
             }
         }
-    }
-
-
-    public void applyRewardPoints(UserReward userReward)
-    {
-        CompletableFuture.supplyAsync(() -> getRewardPoints(userReward.attraction))
-                         .thenAccept (userReward::setRewardPoints);
     }
 
 
