@@ -172,21 +172,11 @@ public class TourGuideService
 
 
 
-//    public Map<UUID, Location> getAllCurrentLocations()
-//    {
-//        Map<UUID, Location> locationMap = new ConcurrentHashMap<>();
-//
-//        getAllUsers().forEach(
-//                                user -> { locationMap.put(user.getUserId(), user.getLastVisitedLocation().location);}
-//                             );
-//        return locationMap;
-//    }
-
-
-
-    public List<Location> getAllCurrentLocations()
+    public List<VisitedLocation> getAllVisitedLocationsOfAllUsers()
     {
-        return getAllUsers().stream().map(User::getCurrentLocation).collect(Collectors.toList());
+        return getAllUsers().stream()
+                            .flatMap(user -> user.getVisitedLocations().stream())
+                            .collect(Collectors.toList());
     }
 
 

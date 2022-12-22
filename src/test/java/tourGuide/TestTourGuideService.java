@@ -130,7 +130,7 @@ public class TestTourGuideService
 
 
 	@Test
-	public void getAllUserLocation()
+	public void getAllVisitedLocationsOfAllUsers()
 	{
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
@@ -138,27 +138,30 @@ public class TestTourGuideService
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 
 		User user1 = new User(UUID.randomUUID(), "jon1", "111", "jon1@tourGuide.com");
-		Location l1 = new Location(1,1);
-		user1.addToVisitedLocations(new VisitedLocation(user1.getUserId(),l1, new Date()));
+		user1.addToVisitedLocations(new VisitedLocation(user1.getUserId(),new Location(1,1), new Date()));
+		user1.addToVisitedLocations(new VisitedLocation(user1.getUserId(),new Location(11,11), new Date()));
+		user1.addToVisitedLocations(new VisitedLocation(user1.getUserId(),new Location(12,12), new Date()));
 		tourGuideService.addUser(user1);
 
 		User user2 = new User(UUID.randomUUID(), "jon2", "222", "jon2@tourGuide.com");
-		Location l2 = new Location(2,2);
-		user2.addToVisitedLocations(new VisitedLocation(user2.getUserId(),l2, new Date()));
+		user2.addToVisitedLocations(new VisitedLocation(user2.getUserId(), new Location(2,2), new Date()));
+		user2.addToVisitedLocations(new VisitedLocation(user2.getUserId(),new Location(21,21), new Date()));
+		user2.addToVisitedLocations(new VisitedLocation(user2.getUserId(),new Location(22,22), new Date()));
 		tourGuideService.addUser(user2);
 
 		User user3 = new User(UUID.randomUUID(), "jon3", "333", "jon3@tourGuide.com");
-		Location l3 = new Location(3,3);
-		user3.addToVisitedLocations(new VisitedLocation(user3.getUserId(),l3, new Date()));
+		user3.addToVisitedLocations(new VisitedLocation(user3.getUserId(),new Location(3,3), new Date()));
+		user3.addToVisitedLocations(new VisitedLocation(user3.getUserId(),new Location(31,31), new Date()));
+		user3.addToVisitedLocations(new VisitedLocation(user3.getUserId(),new Location(32,32), new Date()));
 		tourGuideService.addUser(user3);
 
-		List<Location> locations = tourGuideService.getAllCurrentLocations();
+		List<VisitedLocation> allLocationsOfAllUsers = tourGuideService.getAllVisitedLocationsOfAllUsers();
 
-		assertEquals(3, locations.size());
+		assertEquals(9, allLocationsOfAllUsers.size());
 
-		assertTrue(locations.contains(l1));
-		assertTrue(locations.contains(l2));
-		assertTrue(locations.contains(l3));
+		assertTrue(allLocationsOfAllUsers.containsAll(user1.getVisitedLocations()));
+		assertTrue(allLocationsOfAllUsers.containsAll(user2.getVisitedLocations()));
+		assertTrue(allLocationsOfAllUsers.containsAll(user3.getVisitedLocations()));
 	}
 
 	@Test

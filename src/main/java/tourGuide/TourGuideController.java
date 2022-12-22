@@ -54,10 +54,10 @@ public class TourGuideController
     }
 
 
-    @RequestMapping("/getAllCurrentLocations")
-    public String getAllCurrentLocations()
+    @RequestMapping("/getAllLocationsOfAllUsers")
+    public String getAllLocationsOfAllUsers()
     {
-        return JsonStream.serialize(tourGuideService.getAllCurrentLocations());
+        return JsonStream.serialize(tourGuideService.getAllVisitedLocationsOfAllUsers());
     }
 
 

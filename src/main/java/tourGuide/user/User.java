@@ -3,7 +3,6 @@ package tourGuide.user;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.ConcurrentMap;
 
 import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;

@@ -172,125 +172,115 @@ public class TourGuideService
 
 
 
-//    public Map&lt;UUID, Location&gt; getAllCurrentLocations()
-//    {
-//        Map&lt;UUID, Location&gt; locationMap = new ConcurrentHashMap&lt;&gt;();
-//
-//        getAllUsers().forEach(
-//                                user -&gt; { locationMap.put(user.getUserId(), user.getLastVisitedLocation().location);}
-//                             );
-//        return locationMap;
-//    }
-
-
-
-    public List&lt;Location&gt; getAllCurrentLocations()
+    public List&lt;VisitedLocation&gt; getAllVisitedLocationsOfAllUsers()
     {
-<span class="fc" id="L189">        return getAllUsers().stream().map(User::getCurrentLocation).collect(Collectors.toList());</span>
+<span class="fc" id="L177">        return getAllUsers().stream()</span>
+<span class="fc" id="L178">                            .flatMap(user -&gt; user.getVisitedLocations().stream())</span>
+<span class="fc" id="L179">                            .collect(Collectors.toList());</span>
     }
 
 
     private void addShutDownHook()
     {
-<span class="fc" id="L195">        Runtime.getRuntime().addShutdownHook(new Thread()</span>
-<span class="fc" id="L196">        {</span>
+<span class="fc" id="L185">        Runtime.getRuntime().addShutdownHook(new Thread()</span>
+<span class="fc" id="L186">        {</span>
             public void run()
             {
-<span class="fc" id="L199">                tracker.stopTracking();</span>
-<span class="fc" id="L200">            }</span>
+<span class="fc" id="L189">                tracker.stopTracking();</span>
+<span class="fc" id="L190">            }</span>
         });
-<span class="fc" id="L202">    }</span>
+<span class="fc" id="L192">    }</span>
 
     /**********************************************************************************
      * Methods Below: For Internal Testing
      **********************************************************************************/
     private static final String tripPricerApiKey = &quot;test-server-api-key&quot;;
     // Database connection will be used for external users, but for testing purposes internal users are provided and stored in memory
-<span class="fc" id="L209">    private final Map&lt;String, User&gt; internalUserMap = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L199">    private final Map&lt;String, User&gt; internalUserMap = new HashMap&lt;&gt;();</span>
 
     private void initializeInternalUsers()
     {
-<span class="fc" id="L213">        IntStream.range(0, InternalTestHelper.getInternalUserNumber()).forEach( i -&gt; {</span>
-<span class="nc" id="L214">                                                                                        String userName = &quot;internalUser&quot; + i;</span>
-<span class="nc" id="L215">                                                                                        String phone = &quot;000&quot;;</span>
-<span class="nc" id="L216">                                                                                        String email = userName + &quot;@tourGuide.com&quot;;</span>
-<span class="nc" id="L217">                                                                                        User user = new User(UUID.randomUUID(), userName, phone, email);</span>
-<span class="nc" id="L218">                                                                                        generateUserLocationHistory(user);</span>
+<span class="fc" id="L203">        IntStream.range(0, InternalTestHelper.getInternalUserNumber()).forEach( i -&gt; {</span>
+<span class="nc" id="L204">                                                                                        String userName = &quot;internalUser&quot; + i;</span>
+<span class="nc" id="L205">                                                                                        String phone = &quot;000&quot;;</span>
+<span class="nc" id="L206">                                                                                        String email = userName + &quot;@tourGuide.com&quot;;</span>
+<span class="nc" id="L207">                                                                                        User user = new User(UUID.randomUUID(), userName, phone, email);</span>
+<span class="nc" id="L208">                                                                                        generateUserLocationHistory(user);</span>
 
-<span class="nc" id="L220">                                                                                        internalUserMap.put(userName, user);</span>
-<span class="nc" id="L221">                                                                                     }</span>
+<span class="nc" id="L210">                                                                                        internalUserMap.put(userName, user);</span>
+<span class="nc" id="L211">                                                                                     }</span>
                                                                                );
-<span class="fc" id="L223">        logger.debug(&quot;Created &quot; + InternalTestHelper.getInternalUserNumber() + &quot; internal test users.&quot;);</span>
-<span class="fc" id="L224">    }</span>
+<span class="fc" id="L213">        logger.debug(&quot;Created &quot; + InternalTestHelper.getInternalUserNumber() + &quot; internal test users.&quot;);</span>
+<span class="fc" id="L214">    }</span>
 
     private void generateUserLocationHistory(User user)
     {
-<span class="nc" id="L228">        IntStream.range(0, 3).forEach(i -&gt; {</span>
-<span class="nc" id="L229">                                            user.addToVisitedLocations(</span>
+<span class="nc" id="L218">        IntStream.range(0, 3).forEach(i -&gt; {</span>
+<span class="nc" id="L219">                                            user.addToVisitedLocations(</span>
                                                                         new VisitedLocation(
-<span class="nc" id="L231">                                                                                            user.getUserId(),</span>
-<span class="nc" id="L232">                                                                                            new Location(generateRandomLatitude(),</span>
-<span class="nc" id="L233">                                                                                            generateRandomLongitude()),</span>
-<span class="nc" id="L234">                                                                                            getRandomTime()</span>
+<span class="nc" id="L221">                                                                                            user.getUserId(),</span>
+<span class="nc" id="L222">                                                                                            new Location(generateRandomLatitude(),</span>
+<span class="nc" id="L223">                                                                                            generateRandomLongitude()),</span>
+<span class="nc" id="L224">                                                                                            getRandomTime()</span>
                                                                                            )
                                                                       );
-<span class="nc" id="L237">                                            }</span>
+<span class="nc" id="L227">                                            }</span>
                                       );
-<span class="nc" id="L239">    }</span>
+<span class="nc" id="L229">    }</span>
 
     private double generateRandomLongitude()
     {
-<span class="nc" id="L243">        double leftLimit = -180;</span>
-<span class="nc" id="L244">        double rightLimit = 180;</span>
-<span class="nc" id="L245">        return leftLimit + new Random().nextDouble() * (rightLimit - leftLimit);</span>
+<span class="nc" id="L233">        double leftLimit = -180;</span>
+<span class="nc" id="L234">        double rightLimit = 180;</span>
+<span class="nc" id="L235">        return leftLimit + new Random().nextDouble() * (rightLimit - leftLimit);</span>
     }
 
     private double generateRandomLatitude()
     {
-<span class="nc" id="L250">        double leftLimit = -85.05112878;</span>
-<span class="nc" id="L251">        double rightLimit = 85.05112878;</span>
-<span class="nc" id="L252">        return leftLimit + new Random().nextDouble() * (rightLimit - leftLimit);</span>
+<span class="nc" id="L240">        double leftLimit = -85.05112878;</span>
+<span class="nc" id="L241">        double rightLimit = 85.05112878;</span>
+<span class="nc" id="L242">        return leftLimit + new Random().nextDouble() * (rightLimit - leftLimit);</span>
     }
 
     private Date getRandomTime()
     {
-<span class="nc" id="L257">        LocalDateTime localDateTime = LocalDateTime.now().minusDays(new Random().nextInt(30));</span>
-<span class="nc" id="L258">        return Date.from(localDateTime.toInstant(ZoneOffset.UTC));</span>
+<span class="nc" id="L247">        LocalDateTime localDateTime = LocalDateTime.now().minusDays(new Random().nextInt(30));</span>
+<span class="nc" id="L248">        return Date.from(localDateTime.toInstant(ZoneOffset.UTC));</span>
     }
 
     public UserPreferences setUserPreferences(UserPreferences newPreferences)
     {
-<span class="nc" id="L263">        String userName = newPreferences.getUserName();</span>
+<span class="nc" id="L253">        String userName = newPreferences.getUserName();</span>
 
-<span class="nc" id="L265">        User user = getUser(userName);</span>
+<span class="nc" id="L255">        User user = getUser(userName);</span>
 
-<span class="nc" id="L267">        UserPreferences preference = user.getUserPreferences();</span>
+<span class="nc" id="L257">        UserPreferences preference = user.getUserPreferences();</span>
 
-<span class="nc bnc" id="L269" title="All 2 branches missed.">        if (newPreferences.getHighPricePoint() != null)</span>
+<span class="nc bnc" id="L259" title="All 2 branches missed.">        if (newPreferences.getHighPricePoint() != null)</span>
         {
-<span class="nc" id="L271">            preference.setHighPricePoint(newPreferences.getHighPricePoint());</span>
+<span class="nc" id="L261">            preference.setHighPricePoint(newPreferences.getHighPricePoint());</span>
         }
-<span class="nc bnc" id="L273" title="All 2 branches missed.">        if (newPreferences.getLowerPricePoint() != null)</span>
+<span class="nc bnc" id="L263" title="All 2 branches missed.">        if (newPreferences.getLowerPricePoint() != null)</span>
         {
-<span class="nc" id="L275">            preference.setLowerPricePoint(newPreferences.getLowerPricePoint());</span>
+<span class="nc" id="L265">            preference.setLowerPricePoint(newPreferences.getLowerPricePoint());</span>
         }
-<span class="nc bnc" id="L277" title="All 2 branches missed.">        if(newPreferences.getNumberOfAdults() &gt; 0)</span>
+<span class="nc bnc" id="L267" title="All 2 branches missed.">        if(newPreferences.getNumberOfAdults() &gt; 0)</span>
         {
-<span class="nc" id="L279">            preference.setNumberOfAdults(newPreferences.getNumberOfAdults());</span>
+<span class="nc" id="L269">            preference.setNumberOfAdults(newPreferences.getNumberOfAdults());</span>
         }
-<span class="nc bnc" id="L281" title="All 2 branches missed.">        if(newPreferences.getNumberOfChildren() &gt; 0)</span>
+<span class="nc bnc" id="L271" title="All 2 branches missed.">        if(newPreferences.getNumberOfChildren() &gt; 0)</span>
         {
-<span class="nc" id="L283">            preference.setNumberOfChildren(newPreferences.getNumberOfChildren());</span>
+<span class="nc" id="L273">            preference.setNumberOfChildren(newPreferences.getNumberOfChildren());</span>
         }
-<span class="nc bnc" id="L285" title="All 2 branches missed.">        if(newPreferences.getTicketQuantity() &gt; 0)</span>
+<span class="nc bnc" id="L275" title="All 2 branches missed.">        if(newPreferences.getTicketQuantity() &gt; 0)</span>
         {
-<span class="nc" id="L287">            preference.setTicketQuantity(newPreferences.getTicketQuantity());</span>
+<span class="nc" id="L277">            preference.setTicketQuantity(newPreferences.getTicketQuantity());</span>
         }
-<span class="nc bnc" id="L289" title="All 2 branches missed.">        if (newPreferences.getTripDuration() &gt; 0)</span>
+<span class="nc bnc" id="L279" title="All 2 branches missed.">        if (newPreferences.getTripDuration() &gt; 0)</span>
         {
-<span class="nc" id="L291">            preference.setTripDuration(newPreferences.getTripDuration());</span>
+<span class="nc" id="L281">            preference.setTripDuration(newPreferences.getTripDuration());</span>
         }
-<span class="nc" id="L293">        return preference;</span>
+<span class="nc" id="L283">        return preference;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
