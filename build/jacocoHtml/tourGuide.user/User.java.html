@@ -78,7 +78,7 @@ public class User
 
     public Deque&lt;VisitedLocation&gt; getVisitedLocations()
     {
-<span class="nc" id="L81">        return visitedLocations;</span>
+<span class="fc" id="L81">        return visitedLocations;</span>
     }
 
     public void clearVisitedLocations()
@@ -88,23 +88,23 @@ public class User
 
     public void addUserReward(UserReward userReward)
     {
-<span class="nc" id="L91">        userRewards.putIfAbsent(userReward.getAttractionName(), userReward);</span>
-<span class="nc" id="L92">    }</span>
+<span class="fc" id="L91">        userRewards.putIfAbsent(userReward.getAttractionName(), userReward);</span>
+<span class="fc" id="L92">    }</span>
 
     public Collection&lt;UserReward&gt; getUserRewards()
     {
-<span class="nc" id="L96">        return userRewards.values();</span>
+<span class="fc" id="L96">        return userRewards.values();</span>
     }
 
     public UserPreferences getUserPreferences()
     {
-<span class="nc" id="L101">        return userPreferences;</span>
+<span class="fc" id="L101">        return userPreferences;</span>
     }
 
     public void setUserPreferences(UserPreferences userPreferences)
     {
-<span class="nc" id="L106">        this.userPreferences = userPreferences;</span>
-<span class="nc" id="L107">    }</span>
+<span class="fc" id="L106">        this.userPreferences = userPreferences;</span>
+<span class="fc" id="L107">    }</span>
 
     public VisitedLocation getLastVisitedLocation()
     {
@@ -118,8 +118,8 @@ public class User
 
     public void setTripDeals(List&lt;Provider&gt; tripDeals)
     {
-<span class="nc" id="L121">        this.tripDeals = tripDeals;</span>
-<span class="nc" id="L122">    }</span>
+<span class="fc" id="L121">        this.tripDeals = tripDeals;</span>
+<span class="fc" id="L122">    }</span>
 
     public List&lt;Provider&gt; getTripDeals()
     {
@@ -128,9 +128,9 @@ public class User
 
     public boolean isAttractionRewarded(Attraction attraction)
     {
-<span class="nc" id="L131">        return getUserRewards().stream()</span>
-<span class="nc" id="L132">                               .map(UserReward::getAttractionName)</span>
-<span class="nc" id="L133">                               .anyMatch(name -&gt; name.equals(attraction.attractionName));</span>
+<span class="fc" id="L131">        return getUserRewards().stream()</span>
+<span class="fc" id="L132">                               .map(UserReward::getAttractionName)</span>
+<span class="fc" id="L133">                               .anyMatch(name -&gt; name.equals(attraction.attractionName));</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>
